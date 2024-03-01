@@ -107,13 +107,18 @@ export class Bot implements Runnable {
       tsFiles.map(async (file) => {
         const filePath = `${folderPath}/${file}`;
         const module = await import(filePath);
+        // const keys = Object.keys(module);
 
-        for (const [key] of module) {
-          const ImportedCommand = module[key];
-          if (typeof ImportedCommand === "function" && ImportedCommand.prototype instanceof Command) {
-            const commandInstance = new ImportedCommand(); // Create command instance
-            commandInstance.configure(); // Configure command
-            loadedCommands.push(commandInstance); // Add command to the container
+        for (const key in module) {
+          if (Object.prototype.hasOwnProperty.call(module, key)) {
+            const element = module[key];
+
+            const ImportedCommand = module[key];
+            if (typeof ImportedCommand === "function" && ImportedCommand.prototype instanceof Command) {
+              const commandInstance = new ImportedCommand(); // Create command instance
+              commandInstance.configure(); // Configure command
+              loadedCommands.push(commandInstance); // Add command to the container
+            }
           }
         }
       }),
