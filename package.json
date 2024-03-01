@@ -10,21 +10,17 @@
     "build": "pnpm tsc && tsc-alias",
     "start": "node dist/index.js",
     "dev": "pnpm ts-node-dev -r tsconfig-paths/register src/index.ts",
-    "lint": "pnpm eslint . --ext .ts"
+    "lint": "biome lint src/ --apply",
+    "format": "biome format src/ --write"
   },
   "repository": {
     "url": "https://github.com/KrozT/openai-discord",
     "type": "git"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.5.3",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^20.3.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.11",
-    "@typescript-eslint/parser": "^5.59.11",
-    "eslint": "^8.42.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
     "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.6",
     "tsconfig-paths": "^4.2.0",
@@ -34,7 +30,7 @@
     "discord.js": "^14.11.0",
     "dotenv": "^16.1.4",
     "fs-extra": "^11.1.1",
-    "openai": "^3.2.1",
+    "openai": "^4.28.4",
     "winston": "^3.9.0"
   }
 }

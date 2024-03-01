@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import { Bot } from '@/bot';
-import { Api } from '@/api';
+import dotenv from "dotenv";
+import { Bot } from "@/bot";
+import { Api } from "@/api";
 
 /**
  * Load environment variables from .env file

@@ -4,8 +4,8 @@ import {
   CommandInteractionOptionResolver,
   SlashCommandBuilder,
   TextChannel,
-} from 'discord.js';
-import { AI } from '@/models/ai';
+} from "discord.js";
+import { AI } from "@/models/ai";
 
 export abstract class Command extends SlashCommandBuilder {
   /**
@@ -37,10 +37,9 @@ export abstract class Command extends SlashCommandBuilder {
    * @protected
    */
   protected addEphemeralOption(): void {
-    this.addBooleanOption((option) => option
-      .setName('ephemeral')
-      .setDescription('Hide the response from other users')
-      .setRequired(false));
+    this.addBooleanOption((option) =>
+      option.setName("ephemeral").setDescription("Hide the response from other users").setRequired(false),
+    );
   }
 
   /**
@@ -48,7 +47,7 @@ export abstract class Command extends SlashCommandBuilder {
    * @protected
    */
   protected get ephemeral(): boolean {
-    return this._interactionResolver.getBoolean('ephemeral') ?? false;
+    return this._interactionResolver.getBoolean("ephemeral") ?? false;
   }
 
   /**
@@ -68,11 +67,7 @@ export abstract class Command extends SlashCommandBuilder {
    * @param ai - AI service to use for the command response
    * @protected
    */
-  protected abstract execute(
-    client: Client,
-    interaction: CommandInteraction,
-    ai?: AI
-  ): Promise<void>;
+  protected abstract execute(client: Client, interaction: CommandInteraction, ai?: AI): Promise<void>;
 
   /**
    * Execute the command
@@ -81,11 +76,7 @@ export abstract class Command extends SlashCommandBuilder {
    * @param ai - AI service to use for the command response
    * @public
    */
-  public async executeCommand(
-    client: Client,
-    interaction: CommandInteraction,
-    ai?: AI,
-  ): Promise<void> {
+  public async executeCommand(client: Client, interaction: CommandInteraction, ai?: AI): Promise<void> {
     /**
      * Set the client for the command
      */
@@ -99,7 +90,7 @@ export abstract class Command extends SlashCommandBuilder {
     /**
      * Get the options from the interaction
      */
-    this._interactionResolver = (interaction.options as CommandInteractionOptionResolver);
+    this._interactionResolver = interaction.options as CommandInteractionOptionResolver;
 
     /**
      * Execute the command

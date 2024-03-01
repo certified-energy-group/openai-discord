@@ -1,5 +1,5 @@
-import { Client, CommandInteraction } from 'discord.js';
-import { Embed, EmbedAuthor, EmbedType } from '@/bot/models/embed';
+import { Client, CommandInteraction } from "discord.js";
+import { Embed, EmbedAuthor, EmbedType } from "@/bot/models/embed";
 
 export class ImageEmbed extends Embed {
   /**
@@ -18,7 +18,7 @@ export class ImageEmbed extends Embed {
     /**
      * Set the embed properties
      */
-    this.setURL('https://github.com/KrozT/openai-discord'); // Add a link to group multiple images on the same embed
+    this.setURL("https://github.com/KrozT/openai-discord"); // Add a link to group multiple images on the same embed
     this.setImage(imageURL); // Add the image to the embed
   }
 }

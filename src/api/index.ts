@@ -1,15 +1,24 @@
 import {
-  ChatCompletionRequestMessage,
-  ChatCompletionResponseMessage,
-  Configuration,
-  CreateImageRequestSizeEnum,
-  ImagesResponse,
-  OpenAIApi,
-} from 'openai';
-import process from 'process';
-import { AI } from '@/models/ai';
-import { Runnable } from '@/models/runnable';
-import { Logger } from '@/logger';
+  // ChatCompletionRequestMessage,
+  // ChatCompletionResponseMessage,
+  // Configuration,
+  // CreateImageRequestSizeEnum,
+  // ImagesResponse,
+  // OpenAIApi,
+  ClientOptions,
+  OpenAI,
+} from "openai";
+import process from "process";
+import { AI, ImageSize } from "@/models/ai";
+import { Runnable } from "@/models/runnable";
+import { Logger } from "@/logger";
+import type {
+  ChatCompletionMessageParam,
+  ChatCompletionMessage,
+  Image,
+  CompletionChoice,
+  ChatCompletion,
+} from "openai/resources";
 
 export class Api implements AI, Runnable {
   /**
@@ -22,13 +31,13 @@ export class Api implements AI, Runnable {
    * OpenAI API instance
    * @private
    */
-  private _api!: OpenAIApi;
+  private _api!: OpenAI;
 
   /**
    * OpenAI API configuration
    * @private
    */
-  private readonly _configuration: Configuration;
+  private readonly _configuration: ClientOptions;
 
   /**
    * Create API instance
@@ -39,9 +48,9 @@ export class Api implements AI, Runnable {
     /**
      * Create OpenAI API configuration with API key
      */
-    this._configuration = new Configuration({
+    this._configuration = {
       apiKey: process.env.OPENAI_API_KEY,
-    });
+    };
   }
 
   /**
@@ -49,8 +58,8 @@ export class Api implements AI, Runnable {
    */
   run(): void {
     try {
-      this._api = new OpenAIApi(this._configuration); // Create API instance
-      this._logger.logService.info('OpenAI Service has been initialized successfully.'); // Log service initialization
+      this._api = new OpenAI(this._configuration); // Create API instance
+      this._logger.logService.info("OpenAI Service has been initialized successfully."); // Log service initialization
     } catch (error) {
       this._logger.logService.error(`Failed to start OpenAI Service: ${error}`); // Log service initialization error
       process.exit(1); // Exit process
@@ -62,21 +71,25 @@ export class Api implements AI, Runnable {
    * @param chatHistory - Chat history to generate completion from
    * @returns {ChatCompletionResponseMessage} - Chat completion response object containing the completion
    */
-  async chatCompletion(chatHistory: ChatCompletionRequestMessage[])
-    : Promise<ChatCompletionResponseMessage> {
+  async chatCompletion(chatHistory: ChatCompletionMessageParam[]): Promise<ChatCompletion.Choice> {
     /**
      * Create chat completion request and return response or throw error
      */
-    const request = await this._api.createChatCompletion({
-      model: 'gpt-4-turbo-preview',
-      messages: chatHistory,
-    }).then((response) => response.data.choices[0].message)
-      .catch((error: Error) => {
-        this._logger.logService.error(`Failed to get chat completion: ${error.message}`); // Request failed
-        throw error;
+    try {
+      const { choices } = await this._api.chat.completions.create({
+        model: "gpt-4-turbo-preview",
+        messages: chatHistory,
       });
 
-    return (request as ChatCompletionResponseMessage);
+      if (choices.length === 0) {
+        throw new Error("No completion choice returned");
+      }
+
+      return choices[0];
+    } catch (error) {
+      this._logger.logService.error(`Failed to get chat completion: ${(<Error>error).message}`); // Request failed
+      throw error;
+    }
   }
 
   /**
@@ -86,22 +99,23 @@ export class Api implements AI, Runnable {
    * @param size - Size of the image (e.g. "512x512") (max "1024x1024")
    * @returns {ImagesResponse} - Images response object containing the image URLs
    */
-  async createImage(prompt: string, quantity: number, size: CreateImageRequestSizeEnum)
-    : Promise<ImagesResponse> {
+  async createImage(prompt: string, quantity: number, size: ImageSize = "256x256"): Promise<Array<Image>> {
     /**
      * Create image request and return response or throw error
      */
-    const request = await this._api.createImage({
-      model: 'dall-e-3',
-      prompt,
-      n: quantity < 0 || quantity > 4 ? 1 : quantity,
-      size,
-    }).then((response) => response.data)
-      .catch((error: Error) => {
-        this._logger.logService.error(`Failed to get image ${error.message}`); // Request failed
-        throw error;
+    try {
+      const { data } = await this._api.images.generate({
+        model: "dall-e-3",
+        n: quantity < 0 || quantity > 4 ? 1 : quantity,
+        quality: "hd",
+        prompt: prompt,
+        size: size,
       });
 
-    return (request as ImagesResponse);
+      return data;
+    } catch (error) {
+      this._logger.logService.error(`Failed to get image ${(<Error>error).message}`); // Request failed
+      throw error;
+    }
   }
 }

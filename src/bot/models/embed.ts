@@ -1,44 +1,42 @@
-import {
-  Client, Colors, CommandInteraction, EmbedBuilder,
-} from 'discord.js';
+import { Client, Colors, CommandInteraction, EmbedBuilder } from "discord.js";
 
 export enum EmbedAuthor {
   /**
    * Define the embed author as none and do not display a profile
    */
-  None,
+  None = 0,
 
   /**
    * Define the embed author as the user and display its profile
    */
-  User,
+  User = 1,
 
   /**
    * Define the embed author as the bot and display its profile
    */
-  Bot,
+  Bot = 2,
 }
 
 export enum EmbedType {
   /**
    * Define the embed type as a system embed
    */
-  Info = 'embed-info',
+  Info = "embed-info",
 
   /**
    * Define the embed type as an error embed
    */
-  Error = 'embed-error',
+  Error = "embed-error",
 
   /**
    * Define the embed type as a request embed
    */
-  Request = 'embed-request',
+  Request = "embed-request",
 
   /**
    * Define the embed type as a response embed
    */
-  Response = 'embed-response',
+  Response = "embed-response",
 }
 
 export abstract class Embed extends EmbedBuilder {
@@ -117,12 +115,12 @@ export abstract class Embed extends EmbedBuilder {
         break;
       case EmbedAuthor.Bot:
         this.setAuthor({
-          name: this._client.user?.username || 'Aurora AI',
+          name: this._client.user?.username || "Aurora AI",
           iconURL: this._client.user?.avatarURL() || undefined,
         });
         break;
       default:
-        throw new Error('Invalid embed author please use EmbedAuthor.None, EmbedAuthor.User or EmbedAuthor.Bot');
+        throw new Error("Invalid embed author please use EmbedAuthor.None, EmbedAuthor.User or EmbedAuthor.Bot");
     }
   }
 
@@ -150,7 +148,9 @@ export abstract class Embed extends EmbedBuilder {
         this.setFooter({ text: EmbedType.Response });
         break;
       default:
-        throw new Error('Invalid embed type please use EmbedType.System, EmbedType.Error, EmbedType.Request or EmbedType.Response');
+        throw new Error(
+          "Invalid embed type please use EmbedType.System, EmbedType.Error, EmbedType.Request or EmbedType.Response",
+        );
     }
   }
 }

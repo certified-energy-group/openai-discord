@@ -1,7 +1,5 @@
-import {
-  createLogger, format, Logger as WinstonLogger, transports,
-} from 'winston';
-import process from 'process';
+import { createLogger, format, Logger as WinstonLogger, transports } from "winston";
+import process from "process";
 
 export class Logger {
   /**
@@ -19,16 +17,12 @@ export class Logger {
      * Create winston logger instance
      */
     this._logger = createLogger({
-      level: process.env.NODE_ENV === 'dev' ? 'debug' : 'info',
-      transports: [
-        new transports.Console(),
-      ],
+      level: process.env.NODE_ENV === "dev" ? "debug" : "info",
+      transports: [new transports.Console()],
       format: format.combine(
         format.colorize(),
         format.timestamp(),
-        format.printf(({
-          timestamp, level, message, service,
-        }) => `[${timestamp}] [${service}] ${level}: ${message}`),
+        format.printf(({ timestamp, level, message, service }) => `[${timestamp}] [${service}] ${level}: ${message}`),
       ),
       defaultMeta: {
         service: serviceName,

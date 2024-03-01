@@ -1,5 +1,5 @@
-import { Client, CommandInteraction } from 'discord.js';
-import { Embed, EmbedAuthor, EmbedType } from '@/bot/models/embed';
+import { Client, CommandInteraction } from "discord.js";
+import { Embed, EmbedAuthor, EmbedType } from "@/bot/models/embed";
 
 export class ChatEmbed extends Embed {
   /**
