@@ -99,14 +99,13 @@ export class Api implements AI, Runnable {
    * @param size - Size of the image (e.g. "512x512") (max "1024x1024")
    * @returns {ImagesResponse} - Images response object containing the image URLs
    */
-  async createImage(prompt: string, quantity: number, size: ImageSize = "256x256"): Promise<Array<Image>> {
+  async createImage(prompt: string, size: ImageSize = "1024x1024"): Promise<Array<Image>> {
     /**
      * Create image request and return response or throw error
      */
     try {
       const { data } = await this._api.images.generate({
         model: "dall-e-3",
-        n: quantity < 0 || quantity > 4 ? 1 : quantity,
         quality: "hd",
         prompt: prompt,
         size: size,

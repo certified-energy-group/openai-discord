@@ -12,7 +12,7 @@ export interface AI {
    * @param quantity - Quantity of images to generate (e.g. 5) (max 10)
    * @param size - Size of the image (e.g. "512x512") (max "1024x1024")
    */
-  createImage(prompt: string, quantity: number, size: ImageSize): Promise<Array<Image>>;
+  createImage(prompt: string, size: ImageSize): Promise<Array<Image>>;
 }
 
-export type ImageSize = "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null;
+export type ImageSize = "1024x1024" | "1792x1024" | "1024x1792" | null;
