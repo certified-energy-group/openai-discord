@@ -68,7 +68,7 @@ export class Api implements AI, Runnable {
      * Create chat completion request and return response or throw error
      */
     const request = await this._api.createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4-turbo-preview',
       messages: chatHistory,
     }).then((response) => response.data.choices[0].message)
       .catch((error: Error) => {
@@ -92,8 +92,9 @@ export class Api implements AI, Runnable {
      * Create image request and return response or throw error
      */
     const request = await this._api.createImage({
+      model: 'dall-e-3',
       prompt,
-      n: quantity,
+      n: quantity < 0 || quantity > 4 ? 1 : quantity,
       size,
     }).then((response) => response.data)
       .catch((error: Error) => {
